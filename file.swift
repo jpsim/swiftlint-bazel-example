@@ -1,1 +1,1 @@
-let a : Int = 0
+let forbidden : Int = 1
