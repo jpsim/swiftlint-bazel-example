@@ -6,6 +6,13 @@ http_archive(
     url = "https://github.com/bazelbuild/rules_apple/releases/download/1.0.1/rules_apple.1.0.1.tar.gz",
 )
 
+http_archive(
+    name = "build_bazel_rules_swift",
+    sha256 = "ccdaa455bc68587a0ef1dad5642345e7a9728975874d51751ed013391c7ac44b",
+    strip_prefix = "rules_swift-a707e5491ebcf61e0e6ca7346755695dd1786f47",
+    url = "https://github.com/bazelbuild/rules_swift/archive/a707e5491ebcf61e0e6ca7346755695dd1786f47.tar.gz",
+)
+
 load(
     "@build_bazel_rules_apple//apple:repositories.bzl",
     "apple_rules_dependencies",
@@ -49,9 +56,8 @@ swiftlint_deps()
 
 http_archive(
     name = "com_github_buildbuddy_io_rules_xcodeproj",
-    sha256 = "a526d0f001325f31ea011d64afec2b4e5df5a9e7cc4a1dde11f5b885ae19e2b0",
-    strip_prefix = "rules_xcodeproj-7cdff3362ea8fffae42097b9276ff8a6ffbee2fb",
-    url = "https://github.com/buildbuddy-io/rules_xcodeproj/archive/7cdff3362ea8fffae42097b9276ff8a6ffbee2fb.tar.gz",
+    sha256 = "a647ad9ee6664a78377cf5707331966b6788be09d1fea48045a61bc450c8f1b1",
+    url = "https://github.com/buildbuddy-io/rules_xcodeproj/releases/download/0.7.0/release.tar.gz",
 )
 
 load("@com_github_buildbuddy_io_rules_xcodeproj//xcodeproj:repositories.bzl", "xcodeproj_rules_dependencies")
