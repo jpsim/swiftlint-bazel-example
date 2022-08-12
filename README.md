@@ -172,6 +172,8 @@ bazel run :swiftlint_xcodeproj && xed .
 At which point you should have access to most Xcode features you'd want
 when developing.
 
+![Xcode](xcode.png)
+
 [SwiftLint]: https://github.com/realm/SwiftLint
 [Bazel]: https://bazel.build
 [swiftlint-bazel-instructions]: https://github.com/realm/SwiftLint#using-bazel
