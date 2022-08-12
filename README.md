@@ -114,6 +114,19 @@ version of SwiftLint you target.
 Be sure to add your rule to the `extraRules()` function you defined
 earlier.
 
+Then build and run SwiftLint and you should see your rule being applied:
+
+```console
+$ bazel run -c opt @SwiftLint//:swiftlint
+Linting Swift files in current working directory
+Linting 'ForbiddenVarRule.swift' (2/3)
+Linting 'file.swift' (1/3)
+Linting 'ExtraRules.swift' (3/3)
+file.swift:1:14: warning: Colon Spacing Violation: Colons should be next to the identifier when specifying a type and next to the key in dictionary literals. (colon)
+file.swift:1:5: warning: Forbidden Var Violation: Can't name a variable 'forbidden' (forbidden_var)
+Done linting! Found 2 violations, 0 serious in 3 files.
+```
+
 ### Testing Rules
 
 You can validate the triggering, non-triggering and correction examples
