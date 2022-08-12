@@ -11,7 +11,7 @@ public struct ForbiddenVarRule: ConfigurationProviderRule, SourceKitFreeRule {
         name: "Forbidden Var",
         description: "Can't name a variable 'forbidden'",
         kind: .style,
-        nonTriggeringExamples: [Example("let okay = 0")],
+        nonTriggeringExamples: [Example("let okay = 0"), Example("let not_forbidden = 0")],
         triggeringExamples: [Example("let ↓forbidden = 0")]
     )
 
