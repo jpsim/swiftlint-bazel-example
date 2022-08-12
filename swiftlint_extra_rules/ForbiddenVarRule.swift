@@ -1,7 +1,7 @@
 import SourceKittenFramework
 import SwiftSyntax
 
-public struct ForbiddenVarRule: ConfigurationProviderRule, AutomaticTestableRule, SourceKitFreeRule {
+public struct ForbiddenVarRule: ConfigurationProviderRule, SourceKitFreeRule {
     public var configuration = SeverityConfiguration(.warning)
 
     public init() {}
