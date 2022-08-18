@@ -2,15 +2,8 @@ load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 http_archive(
     name = "build_bazel_rules_apple",
-    sha256 = "36072d4f3614d309d6a703da0dfe48684ec4c65a89611aeb9590b45af7a3e592",
-    url = "https://github.com/bazelbuild/rules_apple/releases/download/1.0.1/rules_apple.1.0.1.tar.gz",
-)
-
-http_archive(
-    name = "build_bazel_rules_swift",
-    sha256 = "ccdaa455bc68587a0ef1dad5642345e7a9728975874d51751ed013391c7ac44b",
-    strip_prefix = "rules_swift-a707e5491ebcf61e0e6ca7346755695dd1786f47",
-    url = "https://github.com/bazelbuild/rules_swift/archive/a707e5491ebcf61e0e6ca7346755695dd1786f47.tar.gz",
+    sha256 = "f003875c248544009c8e8ae03906bbdacb970bc3e5931b40cd76cadeded99632",
+    url = "https://github.com/bazelbuild/rules_apple/releases/download/1.1.0/rules_apple.1.1.0.tar.gz",
 )
 
 load(
@@ -36,8 +29,8 @@ swift_rules_extra_dependencies()
 
 http_archive(
     name = "SwiftLint",
-    sha256 = "e954f4483f7f4cf523896693ee3505585f6beb0f791e362b42d9bdbb615f051a",
-    url = "https://github.com/realm/SwiftLint/releases/download/0.49.0-rc.1/bazel.tar.gz",
+    sha256 = "d34bf123e6380a7527ee78c5f6ec7ede5e00e8c39a9c3b394f590374f566c57d",
+    url = "https://github.com/realm/SwiftLint/releases/download/0.49.0-rc.2/bazel.tar.gz",
 )
 
 local_repository(
@@ -55,10 +48,8 @@ swiftlint_deps()
 
 http_archive(
     name = "com_github_buildbuddy_io_rules_xcodeproj",
-    sha256 = "1bfc8589398afc31c47c3cb402f848c89ea11f8992c3f1c8e93efafa23619a7f",
-    # https://github.com/buildbuddy-io/rules_xcodeproj/pull/900
-    strip_prefix = "rules_xcodeproj-da3c32c91653cd98d4cb0bb7ffe9ac81a6f5f800",
-    url = "https://github.com/buildbuddy-io/rules_xcodeproj/archive/da3c32c91653cd98d4cb0bb7ffe9ac81a6f5f800.tar.gz",
+    sha256 = "1dd8e60ccb457536960d37ad77109c941060d8bc1e6c8b318c7a54ac7cec1b68",
+    url = "https://github.com/buildbuddy-io/rules_xcodeproj/releases/download/0.7.1/release.tar.gz",
 )
 
 load("@com_github_buildbuddy_io_rules_xcodeproj//xcodeproj:repositories.bzl", "xcodeproj_rules_dependencies")
