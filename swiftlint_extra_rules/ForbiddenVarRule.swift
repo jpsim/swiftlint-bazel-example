@@ -1,7 +1,7 @@
 import SourceKittenFramework
 import SwiftSyntax
 
-public struct ForbiddenVarRule: ConfigurationProviderRule, SourceKitFreeRule {
+public struct ForbiddenVarRule: ConfigurationProviderRule, SwiftSyntaxRule {
     public var configuration = SeverityConfiguration(.warning)
 
     public init() {}
@@ -15,23 +15,17 @@ public struct ForbiddenVarRule: ConfigurationProviderRule, SourceKitFreeRule {
         triggeringExamples: [Example("let ↓forbidden = 0")]
     )
 
-    public func validate(file: SwiftLintFile) -> [StyleViolation] {
+    public func makeVisitor(file: SwiftLintFile) -> ViolationsSyntaxVisitor? {
         ForbiddenVarRuleVisitor()
-            .walk(file: file, handler: \.positions)
-            .map { position in
-                StyleViolation(ruleDescription: Self.description,
-                               severity: configuration.severity,
-                               location: Location(file: file, byteOffset: ByteCount(position)))
-            }
     }
 }
 
-private final class ForbiddenVarRuleVisitor: SyntaxVisitor {
-    var positions: [AbsolutePosition] = []
+private final class ForbiddenVarRuleVisitor: SyntaxVisitor, ViolationsSyntaxVisitor {
+    private(set) var violationPositions: [AbsolutePosition] = []
 
     override func visitPost(_ node: IdentifierPatternSyntax) {
         if node.identifier.text == "forbidden" {
-            positions.append(node.positionAfterSkippingLeadingTrivia)
+            violationPositions.append(node.positionAfterSkippingLeadingTrivia)
         }
     }
 }
