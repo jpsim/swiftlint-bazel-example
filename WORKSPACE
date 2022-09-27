@@ -2,8 +2,8 @@ load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 http_archive(
     name = "build_bazel_rules_apple",
-    sha256 = "f003875c248544009c8e8ae03906bbdacb970bc3e5931b40cd76cadeded99632",
-    url = "https://github.com/bazelbuild/rules_apple/releases/download/1.1.0/rules_apple.1.1.0.tar.gz",
+    sha256 = "90e3b5e8ff942be134e64a83499974203ea64797fd620eddeb71b3a8e1bff681",
+    url = "https://github.com/bazelbuild/rules_apple/releases/download/1.1.2/rules_apple.1.1.2.tar.gz",
 )
 
 load(
@@ -29,8 +29,9 @@ swift_rules_extra_dependencies()
 
 http_archive(
     name = "SwiftLint",
-    sha256 = "ec566314e9220ff681ddb639d3a0532834f66f7e733f5a59c7390469dcb5bd3e",
-    url = "https://github.com/realm/SwiftLint/releases/download/0.49.0/bazel.tar.gz",
+    sha256 = "3c77d45316e5dc052bd58b4c39844fc57d7e7a27f23121f204f73426bce5ccb2",
+    strip_prefix = "SwiftLint-cd8961a807f86cf847fe11eaf468cf511eae25d9",
+    url = "https://github.com/realm/SwiftLint/archive/cd8961a807f86cf847fe11eaf468cf511eae25d9.tar.gz",
 )
 
 local_repository(
@@ -48,8 +49,9 @@ swiftlint_deps()
 
 http_archive(
     name = "com_github_buildbuddy_io_rules_xcodeproj",
-    sha256 = "1dd8e60ccb457536960d37ad77109c941060d8bc1e6c8b318c7a54ac7cec1b68",
-    url = "https://github.com/buildbuddy-io/rules_xcodeproj/releases/download/0.7.1/release.tar.gz",
+    sha256 = "d943b9a942a1c6b6fc606222933ac9bb6dbbf40a57f1198e552488449580a0f9",
+    strip_prefix = "rules_xcodeproj-feda40ca6d42dca7b7278850d22c6807968d80e8",
+    url = "https://github.com/buildbuddy-io/rules_xcodeproj/archive/feda40ca6d42dca7b7278850d22c6807968d80e8.tar.gz",
 )
 
 load("@com_github_buildbuddy_io_rules_xcodeproj//xcodeproj:repositories.bzl", "xcodeproj_rules_dependencies")
