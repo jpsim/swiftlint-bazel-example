@@ -1,0 +1,6 @@
+build \
+  --worker_max_instances=HOST_CPUS \
+  --worker_sandboxing=true
+
+# Uncomment to fix the error
+# build:rules_xcodeproj --features=-swift.use_global_index_store
