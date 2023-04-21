@@ -1,31 +1,34 @@
-import SourceKittenFramework
 import SwiftSyntax
 
-public struct ForbiddenVarRule: ConfigurationProviderRule, SwiftSyntaxRule {
-    public var configuration = SeverityConfiguration(.warning)
+struct ForbiddenVarRule: ConfigurationProviderRule, SwiftSyntaxRule {
+    var configuration = SeverityConfiguration(.error)
 
-    public init() {}
+    init() {}
 
-    public static let description = RuleDescription(
+    static let description = RuleDescription(
         identifier: "forbidden_var",
         name: "Forbidden Var",
-        description: "Can't name a variable 'forbidden'",
-        kind: .style,
-        nonTriggeringExamples: [Example("let okay = 0"), Example("let not_forbidden = 0")],
-        triggeringExamples: [Example("let ↓forbidden = 0")]
+        description: "Variables should not be called 'forbidden'",
+        kind: .idiomatic,
+        nonTriggeringExamples: [
+            Example("let notForbidden = 0")
+        ],
+        triggeringExamples: [
+            Example("let ↓forbidden = 0")
+        ]
     )
 
-    public func makeVisitor(file: SwiftLintFile) -> ViolationsSyntaxVisitor? {
-        ForbiddenVarRuleVisitor()
+    func makeVisitor(file: SwiftLintFile) -> ViolationsSyntaxVisitor {
+        Visitor(viewMode: .sourceAccurate)
     }
 }
 
-private final class ForbiddenVarRuleVisitor: SyntaxVisitor, ViolationsSyntaxVisitor {
-    private(set) var violationPositions: [AbsolutePosition] = []
-
-    override func visitPost(_ node: IdentifierPatternSyntax) {
-        if node.identifier.text == "forbidden" {
-            violationPositions.append(node.positionAfterSkippingLeadingTrivia)
+private extension ForbiddenVarRule {
+    final class Visitor: ViolationsSyntaxVisitor {
+        override func visitPost(_ node: IdentifierPatternSyntax) {
+            if node.identifier.text == "forbidden" {
+                violations.append(node.identifier.positionAfterSkippingLeadingTrivia)
+            }
         }
     }
 }

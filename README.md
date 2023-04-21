@@ -14,54 +14,20 @@ This is an example repo that integrates [SwiftLint][SwiftLint] with
 _Please see [SwiftLint's bazel instructions][swiftlint-bazel-instructions]
 if these instructions become out of date._
 
-Put this in your `WORKSPACE`:
+Make sure that you're using bzlmod by adding this line to your
+`.bazelrc`:
 
-```python
-load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
-
-http_archive(
-    name = "build_bazel_rules_apple",
-    sha256 = "36072d4f3614d309d6a703da0dfe48684ec4c65a89611aeb9590b45af7a3e592",
-    url = "https://github.com/bazelbuild/rules_apple/releases/download/1.0.1/rules_apple.1.0.1.tar.gz",
-)
-
-load(
-    "@build_bazel_rules_apple//apple:repositories.bzl",
-    "apple_rules_dependencies",
-)
-
-apple_rules_dependencies()
-
-load(
-    "@build_bazel_rules_swift//swift:repositories.bzl",
-    "swift_rules_dependencies",
-)
-
-swift_rules_dependencies()
-
-load(
-    "@build_bazel_rules_swift//swift:extras.bzl",
-    "swift_rules_extra_dependencies",
-)
-
-swift_rules_extra_dependencies()
-
-http_archive(
-    name = "SwiftLint",
-    sha256 = "e954f4483f7f4cf523896693ee3505585f6beb0f791e362b42d9bdbb615f051a",
-    url = "https://github.com/realm/SwiftLint/releases/download/0.49.0-rc.1/bazel.tar.gz",
-)
-
-load("@SwiftLint//bazel:repos.bzl", "swiftlint_repos")
-
-swiftlint_repos()
-
-load("@SwiftLint//bazel:deps.bzl", "swiftlint_deps")
-
-swiftlint_deps()
+```
+common --enable_bzlmod
 ```
 
-Then you can run SwiftLint in the current directory with this command:
+Then put this in your `MODULE.bazel`:
+
+```python
+bazel_dep(name = "swiftlint", version = "0.51.0", repo_name = "SwiftLint")
+```
+
+Then you can run SwiftLint with this command:
 
 ```console
 bazel run -c opt @SwiftLint//:swiftlint -- --help
@@ -71,22 +37,12 @@ bazel run -c opt @SwiftLint//:swiftlint -- --help
 
 ### Setup
 
-You can define a "local repository" in your `WORKSPACE` file to add
-additional custom, private, native SwiftLint rules:
+You can wire up SwiftLint to use some custom, private, native SwiftLint
+rules by adding this to your `MODULE.bazel`:
 
 ```python
-local_repository(
-    name = "swiftlint_extra_rules",
-    path = "swiftlint_extra_rules",
-)
-```
-
-Then make a directory with the path you specified, and add a stub
-`extraRules()` function:
-
-```console
-mkdir swiftlint_extra_rules
-echo "func extraRules() -> [Rule.Type] { [] }" > swiftlint_extra_rules/ExtraRules.swift
+extra_rules = use_extension("@SwiftLint//bazel:extensions.bzl", "extra_rules")
+extra_rules.setup(srcs = "@swiftlint-bazel-example//swiftlint_extra_rules:extra_rules")
 ```
 
 Finally, you'll need to tell Bazel what source files you want to compile
@@ -95,8 +51,26 @@ as part of SwiftLint in `swiftlint_extra_rules/BUILD`. For example:
 ```python
 filegroup(
     name = "extra_rules",
-    srcs = glob(["**/*.swift"]),
+    srcs = glob(["**/*.swift"]) + ["extra_rules.swift"],
     visibility = ["//visibility:public"],
+)
+
+genrule(
+    name = "extra_rules_func",
+    srcs = glob(["*.swift"]),
+    outs = ["extra_rules.swift"],
+    cmd = """
+set -euo pipefail
+
+echo "func extraRules() -> [Rule.Type] {" >> $(OUTS)
+echo "  [" >> $(OUTS)
+for file in $(SRCS); do
+  filename=$$(basename -- "$$file")
+  echo "    $${filename%.*}.self," >> $(OUTS)
+done
+echo "  ]" >> $(OUTS)
+echo "}" >> $(OUTS)
+    """,
 )
 ```
 
@@ -110,9 +84,6 @@ This means you have access to all the internal APIs in that module.
 These internal APIs can and will change over time, so you may need to
 adjust the custom code you write accordingly whenever you update the
 version of SwiftLint you target.
-
-Be sure to add your rule to the `extraRules()` function you defined
-earlier.
 
 Then build and run SwiftLint and you should see your rule being applied:
 
@@ -142,35 +113,22 @@ You can use the excellent [rules_xcodeproj][rules_xcodeproj] project to
 generate an Xcode project giving you Xcode's IDE functionality to help
 you develop your rules.
 
-You can add it to the bottom of your `WORKSPACE` file:
+You can add it to the bottom of your `MODULE.bazel` file:
 
 ```python
-http_archive(
-    name = "com_github_buildbuddy_io_rules_xcodeproj",
-    sha256 = "1bfc8589398afc31c47c3cb402f848c89ea11f8992c3f1c8e93efafa23619a7f",
-    # https://github.com/buildbuddy-io/rules_xcodeproj/pull/900
-    strip_prefix = "rules_xcodeproj-da3c32c91653cd98d4cb0bb7ffe9ac81a6f5f800",
-    url = "https://github.com/buildbuddy-io/rules_xcodeproj/archive/da3c32c91653cd98d4cb0bb7ffe9ac81a6f5f800.tar.gz",
-)
-
-load("@com_github_buildbuddy_io_rules_xcodeproj//xcodeproj:repositories.bzl", "xcodeproj_rules_dependencies")
-
-xcodeproj_rules_dependencies()
+bazel_dep(name = "rules_xcodeproj", version = "1.4.0")
 ```
 
 And define a `BUILD` file with this configuration:
 
 ```python
-load("@com_github_buildbuddy_io_rules_xcodeproj//xcodeproj:xcodeproj.bzl", "xcodeproj")
+load("@rules_xcodeproj//xcodeproj:defs.bzl", "xcodeproj")
 
 xcodeproj(
     name = "swiftlint_xcodeproj",
-    build_mode = "bazel",
     project_name = "SwiftLint",
-    tags = ["manual"],
     top_level_targets = [
         "@SwiftLint//:swiftlint",
-        "@SwiftLint//:SwiftLintFramework",
         "@SwiftLint//Tests:ExtraRulesTests",
     ],
 )
