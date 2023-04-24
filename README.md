@@ -6,7 +6,7 @@ This is an example repo that integrates [SwiftLint][SwiftLint] with
 ## Pre-Requisites
 
 * Install Bazel or Bazelisk (recommended): https://github.com/bazelbuild/bazelisk#installation
-* Install Xcode 13.3 or later: https://developer.apple.com/xcode/
+* Install Xcode 14 or later: https://developer.apple.com/xcode/
 * You must be running macOS 12 or later
 
 ## Basic Integration
