@@ -11,7 +11,7 @@ genrule(
     cmd = """
 set -euo pipefail
 
-echo "func extraRules() -> [Rule.Type] {" >> $(OUTS)
+echo "public func extraRules() -> [Rule.Type] {" >> $(OUTS)
 echo "  [" >> $(OUTS)
 for file in $(SRCS); do
   filename=$$(basename -- "$$file")
