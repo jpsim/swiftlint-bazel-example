@@ -1,9 +1,8 @@
 import SwiftSyntax
 
-struct ForbiddenVarRule: ConfigurationProviderRule, SwiftSyntaxRule {
-    var configuration = SeverityConfiguration(.error)
-
-    init() {}
+@SwiftSyntaxRule
+struct ForbiddenVarRule: Rule {
+    var configuration = SeverityConfiguration<Self>(.error)
 
     static let description = RuleDescription(
         identifier: "forbidden_var",
@@ -17,14 +16,10 @@ struct ForbiddenVarRule: ConfigurationProviderRule, SwiftSyntaxRule {
             Example("let ↓forbidden = 0")
         ]
     )
-
-    func makeVisitor(file: SwiftLintFile) -> ViolationsSyntaxVisitor {
-        Visitor(viewMode: .sourceAccurate)
-    }
 }
 
 private extension ForbiddenVarRule {
-    final class Visitor: ViolationsSyntaxVisitor {
+    final class Visitor: ViolationsSyntaxVisitor<ConfigurationType> {
         override func visitPost(_ node: IdentifierPatternSyntax) {
             if node.identifier.text == "forbidden" {
                 violations.append(node.identifier.positionAfterSkippingLeadingTrivia)

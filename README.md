@@ -6,8 +6,8 @@ This is an example repo that integrates [SwiftLint][SwiftLint] with
 ## Pre-Requisites
 
 * Install Bazel or Bazelisk (recommended): https://github.com/bazelbuild/bazelisk#installation
-* Install Xcode 14 or later: https://developer.apple.com/xcode/
-* You must be running macOS 12 or later
+* Install Xcode 15 or later: https://developer.apple.com/xcode/
+* You must be running macOS 13 or later
 
 ## Basic Integration
 
@@ -24,7 +24,7 @@ common --enable_bzlmod
 Then put this in your `MODULE.bazel`:
 
 ```python
-bazel_dep(name = "swiftlint", version = "0.52.2", repo_name = "SwiftLint")
+bazel_dep(name = "swiftlint", version = "0.54.0", repo_name = "SwiftLint")
 ```
 
 Then you can run SwiftLint with this command:
@@ -73,7 +73,7 @@ genrule(
     cmd = """
 set -euo pipefail
 
-echo "public func extraRules() -> [Rule.Type] {" >> $(OUTS)
+echo "public func extraRules() -> [any Rule.Type] {" >> $(OUTS)
 echo "  [" >> $(OUTS)
 for file in $(SRCS); do
   filename=$$(basename -- "$$file")
